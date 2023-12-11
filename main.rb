@@ -1,6 +1,8 @@
 require 'dxruby'
 
+#バーの定義
 bar = Sprite.new(0,460,Image.new(100, 20, C_WHITE))
+#壁の定義、ボールの定義
 walls = [Sprite.new( 0, 0, Image.new( 20, 480, C_WHITE)),
         Sprite.new( 0, 0, Image.new( 640, 20, C_WHITE)),
         Sprite.new( 620, 0, Image.new( 20, 480, C_WHITE)),
@@ -8,7 +10,7 @@ walls = [Sprite.new( 0, 0, Image.new( 20, 480, C_WHITE)),
 ball = Sprite.new( 300, 400, Image.new( 20, 20).circle_fill( 10, 10, 10, C_WHITE))
 dx = 4
 dy = -4
-
+#ブロックの定義
 image = Image.new( 58, 18, C_WHITE)
 blocks = []
 5.times do |y|
@@ -16,8 +18,19 @@ blocks = []
         blocks << Sprite.new(21 + 60 * x,21 + 20 * y, image)
     end
 end
+#ゲームの設定管理
+game_main = true
+game_restart = true
 
 Window.loop do
+    if game_restart
+        Window.draw_font(100, 220, "ゲームを始めるにはenterを押して下さい", Font.default)
+    end
+    break if Input.key_push?(K_RETURN)
+end
+Window.loop do
+    if game_main
+
     bar.x = Input.mouse_pos_x
 
     Sprite.draw(walls)
@@ -48,6 +61,10 @@ Window.loop do
         dy = -dy
     end
 
+    if ball.y > 480
+        game_main = false
+    end
+
     
 
     ball.draw
@@ -55,6 +72,9 @@ Window.loop do
     Sprite.draw(blocks)
     #終了処理
     break if Input.key_push?(K_ESCAPE)
+else
+    break
+end
 end
 
 Window.close
